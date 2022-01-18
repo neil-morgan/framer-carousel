@@ -1,1 +1,1 @@
-# framer-carousel
+# chakra-carousel

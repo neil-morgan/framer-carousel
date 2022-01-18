@@ -1,0 +1,8 @@
+{
+    "html.autoClosingTags": false,
+    "typescript.autoClosingTags": false,
+    "javascript.autoClosingTags": false,
+    "typescript.autoClosingTags": false,
+    "editor.formatOnSave": true,
+    "editor.autoClosingBrackets": "never"
+}

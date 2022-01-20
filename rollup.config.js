@@ -1,4 +1,5 @@
 import typescript from "rollup-plugin-typescript2";
+
 import pkg from "./package.json";
 
 export default {
@@ -19,6 +20,7 @@ export default {
         "@chakra-ui/react",
         "@emotion/react",
         "@emotion/styled",
-        "framer-motion"
+        "framer-motion",
+        "resize-observer-polyfill"
     ]
 };

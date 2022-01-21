@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState, useRef, useMemo} from "react";
 import {useAnimation, useMotionValue, PanInfo} from "framer-motion";
-import {MotionFlex} from "./MotionBox";
+import {MotionFlex} from "components/MotionBox";
 
 interface TrackProps {
     setTrackIsActive: (active: boolean) => void;

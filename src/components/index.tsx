@@ -1,15 +1,16 @@
-import React, {useState, useMemo} from "react";
+import React, {FC, ReactNode, useMemo, useState} from "react";
+import {CoreProps} from "types";
+import Item from "components/Item";
+import Wrapper from "components/Wrapper";
+import Track from "components/Track";
 
-import Item from "./components/Item";
-import Wrapper from "./components/Wrapper";
-import Track from "./components/Track";
-
-interface CarouselProps {
-    children: React.ReactNode[];
-    gap: number;
-}
-
-const ChakraCarousel: React.FC<CarouselProps> = ({children, gap = 4}: CarouselProps) => {
+const ChakraCarousel: FC = ({
+    children,
+    itemGap = 4,
+    navIcon = "arrow",
+    navSize = 8,
+    navPosition = "bottom-center"
+}: CoreProps) => {
     const [trackIsActive, setTrackIsActive] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [multiplier, setMultiplier] = useState(0.35);
@@ -17,10 +18,8 @@ const ChakraCarousel: React.FC<CarouselProps> = ({children, gap = 4}: CarouselPr
     const [constraint, setConstraint] = useState(0);
     const [itemWidth, setItemWidth] = useState(3);
 
-    const itemLength = children.length;
-
     const positions = useMemo(
-        () => children.map((_, index) => -Math.abs(itemWidth * index)),
+        () => children.map((_: string, index: number) => -Math.abs(itemWidth * index)),
         [children, itemWidth]
     );
 
@@ -28,10 +27,12 @@ const ChakraCarousel: React.FC<CarouselProps> = ({children, gap = 4}: CarouselPr
         activeItem,
         children,
         constraint,
-        gap,
         isDisabled,
-        itemLength,
+        itemGap,
         itemWidth,
+        navIcon,
+        navPosition,
+        navSize,
         positions,
         setActiveItem,
         setConstraint,
@@ -56,7 +57,7 @@ const ChakraCarousel: React.FC<CarouselProps> = ({children, gap = 4}: CarouselPr
     const itemProps = {
         activeItem,
         constraint,
-        gap,
+        itemGap,
         itemWidth,
         positions,
         setActiveItem,
@@ -67,7 +68,7 @@ const ChakraCarousel: React.FC<CarouselProps> = ({children, gap = 4}: CarouselPr
     return (
         <Wrapper {...wrapperProps}>
             <Track {...trackProps}>
-                {children.map((child, index) => (
+                {children.map((child: ReactNode, index: number) => (
                     <Item {...itemProps} index={index} key={index}>
                         {child}
                     </Item>

@@ -1,38 +1,25 @@
-import React, {useEffect, useRef} from "react";
+import React, {FC, useEffect, useRef} from "react";
 import {Flex, Box} from "@chakra-ui/react";
-import Navigator from "./Navigator";
-import {useResizeObserver} from "../hooks";
+import {WrapperProps} from "types";
+import Navigator from "components/Navigator";
+import {useResizeObserver} from "hooks";
 
-interface WrapperProps {
-    setTrackIsActive: (active: boolean) => void;
-    setIsDisabled: (disabled: boolean) => void;
-    setMultiplier: (multiplier: number) => void;
-    setActiveItem: (item: number | ((prev: number) => number)) => void;
-    setConstraint: (constraint: number) => void;
-    setItemWidth: (width: number) => void;
-    isDisabled: boolean;
-    activeItem: number;
-    constraint: number;
-    itemWidth: number;
-    positions: number[];
-    children: React.ReactNode;
-    gap: number;
-}
-
-const Wrapper: React.FC<WrapperProps> = ({
-    setTrackIsActive,
-    setIsDisabled,
-    setMultiplier,
+const Wrapper: FC = ({
+    activeItem,
+    children,
+    constraint,
+    itemGap,
+    isDisabled,
+    itemWidth,
+    navSize,
+    navIcon,
+    positions,
     setActiveItem,
     setConstraint,
+    setIsDisabled,
     setItemWidth,
-    isDisabled,
-    activeItem,
-    constraint,
-    itemWidth,
-    positions,
-    children,
-    gap
+    setMultiplier,
+    setTrackIsActive
 }: WrapperProps) => {
     const wrapperRef = useRef<null | HTMLDivElement>(null);
     const {width} = useResizeObserver(wrapperRef);
@@ -74,20 +61,21 @@ const Wrapper: React.FC<WrapperProps> = ({
     ]);
 
     const navigatorProps = {
-        handleDecrementClick,
-        handleIncrementClick,
-        handleDotClick,
-        handleFocus,
         activeItem,
         constraint,
+        handleDecrementClick,
+        handleDotClick,
+        handleFocus,
+        handleIncrementClick,
         isDisabled,
-        positions,
         itemWidth,
-        gap
+        navSize,
+        navIcon,
+        positions
     };
 
     return (
-        <Flex direction="column" px={gap} maxW="1920px">
+        <Flex direction="column" px={itemGap}>
             <Box
                 {...(!isDisabled && {_active: {cursor: "grabbing"}, cursor: "grab"})}
                 ref={wrapperRef}

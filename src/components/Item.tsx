@@ -10,7 +10,7 @@ interface ItemProps {
     positions: number[];
     children: React.ReactNode;
     index: number;
-    gap: number;
+    itemGap: number;
 }
 
 const Item: React.FC<ItemProps> = ({
@@ -22,7 +22,7 @@ const Item: React.FC<ItemProps> = ({
     positions,
     children,
     index,
-    gap
+    itemGap
 }: ItemProps) => {
     const [userDidTab, setUserDidTab] = useState(false);
     const handleFocus: React.FocusEventHandler<HTMLDivElement> = () => setTrackIsActive(true);
@@ -46,7 +46,7 @@ const Item: React.FC<ItemProps> = ({
             onBlur={handleBlur}
             w={`${itemWidth}px`}
         >
-            <Box flex={1} pl={gap} pr={gap}>
+            <Box flex={1} pl={itemGap} pr={itemGap}>
                 {children}
             </Box>
         </Flex>

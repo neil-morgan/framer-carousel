@@ -1,20 +1,19 @@
 import React, {FC, useEffect, useRef} from "react";
-import {WrapperProps} from "types";
 import {useResizeObserver} from "hooks";
+import {ContainerProps} from "types";
 
-const Wrapper: FC = ({
+const Container: FC = ({
     children,
     itemGap,
-    isDisabled,
     positions,
     setActiveItem,
     setConstraint,
     setIsDisabled,
     setItemWidth,
     setMultiplier
-}: WrapperProps) => {
-    const wrapperRef = useRef<null | HTMLDivElement>(null);
-    const {width} = useResizeObserver(wrapperRef);
+}: ContainerProps) => {
+    const ContainerRef = useRef<null | HTMLDivElement>(null);
+    const {width} = useResizeObserver(ContainerRef);
 
     useEffect(() => {
         setItemWidth(Math.round(width) / 3);
@@ -42,8 +41,7 @@ const Wrapper: FC = ({
             }}
         >
             <div
-                {...(!isDisabled && {_active: {cursor: "grabbing"}, cursor: "grab"})}
-                ref={wrapperRef}
+                ref={ContainerRef}
                 style={{position: "relative", overflow: "hidden", width: "100%"}}
             >
                 {children}
@@ -52,4 +50,4 @@ const Wrapper: FC = ({
     );
 };
 
-export default Wrapper;
+export default Container;

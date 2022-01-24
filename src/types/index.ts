@@ -1,4 +1,6 @@
 import CoreProps from "./CoreProps";
-import WrapperProps from "./WrapperProps";
+import ContainerProps from "./ContainerProps";
+import ItemProps from "./ItemProps";
+import TrackProps from "./TrackProps";
 
-export {CoreProps, WrapperProps};
+export {CoreProps, ContainerProps, ItemProps, TrackProps};

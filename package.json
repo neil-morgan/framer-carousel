@@ -1,15 +1,14 @@
 {
-    "name": "chakra-carousel",
+    "name": "framer-carousel",
     "version": "0.0.1",
-    "homepage": "https://github.com/neil-morgan/chakra-carousel#readme",
+    "homepage": "https://github.com/neil-morgan/framer-carousel#readme",
     "license": "SEE LICENSE IN LICENSE",
     "author": "Neil Morgan <neilmorgan.mail@gmail.com> (https://www.linkedin.com/in/neil-morgan-/)",
     "description": "",
     "keywords": [
         "react",
         "carousel",
-        "framer-motion",
-        "chakra-ui"
+        "framer-motion"
     ],
     "main": "dist/index.js",
     "scripts": {
@@ -21,10 +20,10 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/neil-morgan/chakra-carousel.git"
+        "url": "git+https://github.com/neil-morgan/framer-carousel.git"
     },
     "bugs": {
-        "url": "https://github.com/neil-morgan/chakra-carousel/issues"
+        "url": "https://github.com/neil-morgan/framer-carousel/issues"
     },
     "files": [
         "dist"

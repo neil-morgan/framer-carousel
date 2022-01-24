@@ -1,2 +1,2 @@
-import ChakraCarousel from "./components";
-export default ChakraCarousel;
+import FramerCarousel from "./components";
+export default FramerCarousel;

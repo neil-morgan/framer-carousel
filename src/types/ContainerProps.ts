@@ -5,7 +5,6 @@ export default interface WrapperProps {
     setActiveItem: (item: number | ((prev: number) => number)) => void;
     setConstraint: (constraint: number) => void;
     setItemWidth: (width: number) => void;
-    isDisabled: boolean;
     activeItem: number;
     constraint: number;
     itemWidth: number;

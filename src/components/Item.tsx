@@ -1,18 +1,7 @@
-import React, {useState} from "react";
+import React, {FC, useState} from "react";
+import {ItemProps} from "types";
 
-interface ItemProps {
-    setTrackIsActive: (active: boolean) => void;
-    setActiveItem: (item: number) => void;
-    activeItem: number;
-    constraint: number;
-    itemWidth: number;
-    positions: number[];
-    children: React.ReactNode;
-    index: number;
-    itemGap: number;
-}
-
-const Item: React.FC<ItemProps> = ({
+const Item: FC = ({
     setTrackIsActive,
     setActiveItem,
     activeItem,
@@ -20,25 +9,29 @@ const Item: React.FC<ItemProps> = ({
     itemWidth,
     positions,
     children,
-    index,
+    itemIndex,
     itemGap
 }: ItemProps) => {
     const [userDidTab, setUserDidTab] = useState(false);
     const handleFocus: React.FocusEventHandler<HTMLDivElement> = () => setTrackIsActive(true);
 
     const handleBlur: React.FocusEventHandler<HTMLDivElement> = () => {
-        if (userDidTab && index + 1 === positions.length) setTrackIsActive(false);
+        if (userDidTab && itemIndex + 1 === positions.length) setTrackIsActive(false);
         setUserDidTab(false);
     };
 
     const handleKeyUp: React.KeyboardEventHandler<HTMLDivElement> = (event) =>
-        event.key === "Tab" && activeItem !== positions.length - constraint && setActiveItem(index);
+        event.key === "Tab" &&
+        activeItem !== positions.length - constraint &&
+        setActiveItem(itemIndex);
 
     const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) =>
         event.key === "Tab" && setUserDidTab(true);
 
     return (
         <div
+            role="button"
+            tabIndex={0}
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             onKeyUp={handleKeyUp}

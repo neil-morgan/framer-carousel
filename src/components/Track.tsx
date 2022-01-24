@@ -1,20 +1,8 @@
-import React, {useCallback, useEffect, useState, useRef, useMemo} from "react";
+import React, {useCallback, FC, useEffect, useState, useRef, useMemo} from "react";
 import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
+import {TrackProps} from "types";
 
-interface TrackProps {
-    setTrackIsActive: (active: boolean) => void;
-    trackIsActive: boolean;
-    setActiveItem: (item: number | ((prev: number) => number)) => void;
-    isDisabled: boolean;
-    activeItem: number;
-    constraint: number;
-    multiplier: number;
-    itemWidth: number;
-    positions: number[];
-    children: React.ReactNode;
-}
-
-const Track: React.FC<TrackProps> = ({
+const Track: FC = ({
     setTrackIsActive,
     trackIsActive,
     setActiveItem,

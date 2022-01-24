@@ -1,10 +1,10 @@
 import React, {FC, ReactNode, useMemo, useState} from "react";
 import {CoreProps} from "types";
 import Item from "components/Item";
-import Wrapper from "components/Wrapper";
+import Container from "components/Container";
 import Track from "components/Track";
 
-const ChakraCarousel: FC = ({
+const FramerCarousel: FC = ({
     children,
     itemGap = 4,
     navIcon = "arrow",
@@ -66,16 +66,19 @@ const ChakraCarousel: FC = ({
     };
 
     return (
-        <Wrapper {...wrapperProps}>
+        <Container {...wrapperProps}>
             <Track {...trackProps}>
-                {children.map((child: ReactNode, index: number) => (
-                    <Item {...itemProps} index={index} key={index}>
-                        {child}
-                    </Item>
-                ))}
+                {children.map((child: ReactNode, index: number) => {
+                    const currentItemProps = {...itemProps, itemIndex: index};
+                    return (
+                        <Item {...currentItemProps} key={index}>
+                            {child}
+                        </Item>
+                    );
+                })}
             </Track>
-        </Wrapper>
+        </Container>
     );
 };
 
-export default ChakraCarousel;
+export default FramerCarousel;

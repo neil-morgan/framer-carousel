@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState, useRef, useMemo} from "react";
-import {useAnimation, useMotionValue, PanInfo} from "framer-motion";
-import {MotionFlex} from "components/MotionBox";
+import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
 
 interface TrackProps {
     setTrackIsActive: (active: boolean) => void;
@@ -44,7 +43,7 @@ const Track: React.FC<TrackProps> = ({
 
     const handleDragStart = () => setDragStartPosition(positions[activeItem]);
 
-    const handleDragEnd = (_unused: string, info: PanInfo) => {
+    const handleDragEnd = (_event: DragEvent, info: PanInfo) => {
         if (isDisabled) {
             return;
         }
@@ -136,19 +135,22 @@ const Track: React.FC<TrackProps> = ({
 
     return itemWidth ? (
         <div ref={node}>
-            <MotionFlex
-                drag={isDisabled ? null : "x"}
+            <motion.div
+                drag={"x"}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
                 dragConstraints={node}
                 animate={controls}
-                style={{x}}
-                minWidth="min-content"
-                flexWrap="nowrap"
-                justify="center"
+                style={{
+                    x,
+                    display: "flex",
+                    minWidth: "min-content",
+                    flexWrap: "nowrap",
+                    justifyContent: "center"
+                }}
             >
                 {children}
-            </MotionFlex>
+            </motion.div>
         </div>
     ) : (
         <></>

@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {Flex, Box} from "@chakra-ui/react";
 
 interface ItemProps {
     setTrackIsActive: (active: boolean) => void;
@@ -39,17 +38,17 @@ const Item: React.FC<ItemProps> = ({
         event.key === "Tab" && setUserDidTab(true);
 
     return (
-        <Flex
+        <div
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             onKeyUp={handleKeyUp}
             onBlur={handleBlur}
-            w={`${itemWidth}px`}
+            style={{width: `${itemWidth}px`}}
         >
-            <Box flex={1} pl={itemGap} pr={itemGap}>
+            <div style={{flex: 1, paddingLeft: `${itemGap}px`, paddingRight: `${itemGap}px`}}>
                 {children}
-            </Box>
-        </Flex>
+            </div>
+        </div>
     );
 };
 

@@ -1,5 +1,4 @@
 import React from "react";
-import {chakra} from "@chakra-ui/react";
 
 interface IconProps {
     style: string;
@@ -17,16 +16,13 @@ const paths = {
 };
 
 const Icon: React.FC<IconProps> = ({style}: IconProps) => (
-    <chakra.svg
-        display="block"
+    <svg
+        style={{display: "block", height: "1em", width: "1em", lineHeight: "1em"}}
         fill="currentColor"
-        height="1em"
-        lineHeight="1em"
         viewBox="0 0 20 20"
-        width="1em"
     >
         <path d={paths[style]} />
-    </chakra.svg>
+    </svg>
 );
 
 export default Icon;

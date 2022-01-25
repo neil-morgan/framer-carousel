@@ -1,11 +1,11 @@
 export default interface ItemProps {
-    setTrackIsActive: (active: boolean) => void;
+    setIsActive: (active: boolean) => void;
     setActiveItem: (item: number) => void;
-    activeItem: number;
-    constraint: number;
+    currentItem: number;
+    division: number;
     itemWidth: number;
-    positions: number[];
+    itemPositions: number[];
     children: React.ReactNode;
     itemIndex: number;
-    itemGap: number;
+    gap: number;
 }

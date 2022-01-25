@@ -2,27 +2,27 @@ import React, {FC, useState} from "react";
 import {ItemProps} from "types";
 
 const Item: FC = ({
-    setTrackIsActive,
+    setIsActive,
     setActiveItem,
-    activeItem,
-    constraint,
+    currentItem,
+    division,
     itemWidth,
-    positions,
+    itemPositions,
     children,
     itemIndex,
-    itemGap
+    gap
 }: ItemProps) => {
     const [userDidTab, setUserDidTab] = useState(false);
-    const handleFocus: React.FocusEventHandler<HTMLDivElement> = () => setTrackIsActive(true);
+    const handleFocus: React.FocusEventHandler<HTMLDivElement> = () => setIsActive(true);
 
     const handleBlur: React.FocusEventHandler<HTMLDivElement> = () => {
-        if (userDidTab && itemIndex + 1 === positions.length) setTrackIsActive(false);
+        if (userDidTab && itemIndex + 1 === itemPositions.length) setIsActive(false);
         setUserDidTab(false);
     };
 
     const handleKeyUp: React.KeyboardEventHandler<HTMLDivElement> = (event) =>
         event.key === "Tab" &&
-        activeItem !== positions.length - constraint &&
+        currentItem !== itemPositions.length - division &&
         setActiveItem(itemIndex);
 
     const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) =>
@@ -30,15 +30,24 @@ const Item: FC = ({
 
     return (
         <div
-            role="button"
-            tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onFocus={handleFocus}
-            onKeyUp={handleKeyUp}
+            className="item"
             onBlur={handleBlur}
-            style={{width: `${itemWidth}px`}}
+            onFocus={handleFocus}
+            onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
+            role="button"
+            style={{
+                width: `${itemWidth}px`
+            }}
+            tabIndex={0}
         >
-            <div style={{flex: 1, paddingLeft: `${itemGap}px`, paddingRight: `${itemGap}px`}}>
+            <div
+                className="item-inner"
+                style={{
+                    paddingLeft: `${gap / 2}px`,
+                    paddingRight: `${gap / 2}px`
+                }}
+            >
                 {children}
             </div>
         </div>

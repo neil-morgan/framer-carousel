@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    &-inner {
+        position: relative;
+        width: 100%;
+    }
+}
+
+.item {
+    display: flex;
+    outline: none;
+    &:hover {
+        cursor: grab;
+    }
+
+    &-inner {
+        display: flex;
+        width: 100%;
+        &:active {
+            cursor: grabbing;
+        }
+    }
+}
+
+.track {
+    display: flex;
+    min-width: min-content;
+}

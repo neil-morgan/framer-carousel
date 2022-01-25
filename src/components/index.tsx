@@ -1,72 +1,55 @@
 import React, {FC, ReactNode, useMemo, useState} from "react";
 import {CoreProps} from "types";
-import Item from "components/Item";
-import Container from "components/Container";
-import Track from "components/Track";
+import Item from "components/item";
+import Container from "components/container";
+import Track from "components/track";
 
-const FramerCarousel: FC = ({
-    children,
-    itemGap = 4,
-    navIcon = "arrow",
-    navSize = 8,
-    navPosition = "bottom-center"
-}: CoreProps) => {
-    const [trackIsActive, setTrackIsActive] = useState(false);
-    const [isDisabled, setIsDisabled] = useState(false);
-    const [multiplier, setMultiplier] = useState(0.35);
-    const [activeItem, setActiveItem] = useState(0);
-    const [constraint, setConstraint] = useState(0);
-    const [itemWidth, setItemWidth] = useState(3);
+const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
+    const [currentItem, setActiveItem] = useState(0);
+    const [division, setDivision] = useState(3);
+    const [isActive, setIsActive] = useState(false);
+    const [itemWidth, setItemWidth] = useState(0);
+    const [velocityMultiplier, setVelocityMultiplier] = useState(0.35);
 
-    const positions = useMemo(
+    const itemPositions = useMemo(
         () => children.map((_: string, index: number) => -Math.abs(itemWidth * index)),
         [children, itemWidth]
     );
 
-    const wrapperProps = {
-        activeItem,
-        children,
-        constraint,
-        isDisabled,
-        itemGap,
-        itemWidth,
-        navIcon,
-        navPosition,
-        navSize,
-        positions,
+    const containerProps = {
+        division,
+        gap,
+        itemPositions,
         setActiveItem,
-        setConstraint,
-        setIsDisabled,
+        setDivision,
         setItemWidth,
-        setMultiplier,
-        setTrackIsActive
+        setVelocityMultiplier
     };
 
     const trackProps = {
-        activeItem,
-        constraint,
-        isDisabled,
+        currentItem,
+        division,
         itemWidth,
-        multiplier,
-        positions,
+        velocityMultiplier,
+        itemPositions,
         setActiveItem,
-        setTrackIsActive,
-        trackIsActive
+        setIsActive,
+        isActive
     };
 
     const itemProps = {
-        activeItem,
-        constraint,
-        itemGap,
+        currentItem,
+        division,
+        gap,
         itemWidth,
-        positions,
+        itemPositions,
         setActiveItem,
-        setTrackIsActive,
-        trackIsActive
+        setIsActive,
+        isActive
     };
 
     return (
-        <Container {...wrapperProps}>
+        <Container {...containerProps}>
             <Track {...trackProps}>
                 {children.map((child: ReactNode, index: number) => {
                     const currentItemProps = {...itemProps, itemIndex: index};

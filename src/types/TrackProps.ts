@@ -1,12 +1,12 @@
 export default interface TrackProps {
-    setTrackIsActive: (active: boolean) => void;
-    trackIsActive: boolean;
-    setActiveItem: (item: number | ((prev: number) => number)) => void;
-    isDisabled: boolean;
-    activeItem: number;
-    constraint: number;
-    multiplier: number;
-    itemWidth: number;
-    positions: number[];
     children: React.ReactNode;
+    currentItem: number;
+    division: number;
+    isActive: boolean;
+    isDisabled: boolean;
+    itemPositions: number[];
+    itemWidth: number;
+    setActiveItem: (item: number | ((prev: number) => number)) => void;
+    setIsActive: (active: boolean) => void;
+    velocityMultiplier: number;
 }

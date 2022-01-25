@@ -3,16 +3,15 @@ import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
 import {TrackProps} from "types";
 
 const Track: FC = ({
-    setTrackIsActive,
-    trackIsActive,
-    setActiveItem,
-    isDisabled,
-    activeItem,
-    constraint,
-    multiplier,
+    children,
+    currentItem,
+    division,
+    isActive,
+    itemPositions,
     itemWidth,
-    positions,
-    children
+    setActiveItem,
+    setIsActive,
+    velocityMultiplier
 }: TrackProps) => {
     const [dragStartPosition, setDragStartPosition] = useState(0);
     const controls = useAnimation();
@@ -29,38 +28,34 @@ const Track: FC = ({
         []
     );
 
-    const handleDragStart = () => setDragStartPosition(positions[activeItem]);
+    const handleDragStart = () => setDragStartPosition(itemPositions[currentItem]);
 
     const handleDragEnd = (_event: DragEvent, info: PanInfo) => {
-        if (isDisabled) {
-            return;
-        }
-
         const distance = info.offset.x;
-        const velocity = info.velocity.x * multiplier;
+        const velocity = info.velocity.x * velocityMultiplier;
         const direction = velocity < 0 || distance < 0 ? 1 : -1;
 
         const extrapolatedPosition =
             dragStartPosition +
             (direction === 1 ? Math.min(velocity, distance) : Math.max(velocity, distance));
 
-        const closestPosition = positions.reduce((prev, curr) => {
+        const closestPosition = itemPositions.reduce((prev, curr) => {
             return Math.abs(curr - extrapolatedPosition) < Math.abs(prev - extrapolatedPosition)
                 ? curr
                 : prev;
         }, 0);
 
-        if (closestPosition < positions[positions.length - constraint]) {
-            setActiveItem(positions.length - constraint);
+        if (closestPosition < itemPositions[itemPositions.length - division]) {
+            setActiveItem(itemPositions.length - division);
             void controls.start({
-                x: positions[positions.length - constraint],
+                x: itemPositions[itemPositions.length - division],
                 transition: {
                     velocity: info.velocity.x,
                     ...transitionProps
                 }
             });
         } else {
-            setActiveItem(positions.indexOf(closestPosition));
+            setActiveItem(itemPositions.indexOf(closestPosition));
             void controls.start({
                 x: closestPosition,
                 transition: {
@@ -74,40 +69,40 @@ const Track: FC = ({
     const handleResize = useCallback(
         () =>
             controls.start({
-                x: positions[activeItem],
+                x: itemPositions[currentItem],
                 transition: {
                     ...transitionProps
                 }
             }),
-        [activeItem, controls, positions, transitionProps]
+        [currentItem, controls, itemPositions, transitionProps]
     );
 
     const handleClick = useCallback(
         (event) => {
             if (node.current === null || undefined) return;
-            setTrackIsActive(node.current.contains(event.target));
+            setIsActive(node.current.contains(event.target));
         },
-        [setTrackIsActive]
+        [setIsActive]
     );
 
     const handleKeyDown = useCallback(
         (event) => {
-            if (trackIsActive && !isDisabled) {
+            if (isActive) {
                 if (
-                    (activeItem < positions.length - constraint && event.key === "ArrowRight") ||
-                    event.key === "ArrowUp"
+                    currentItem < itemPositions.length - division &&
+                    (event.key === "ArrowRight" || event.key === "ArrowUp")
                 ) {
                     event.preventDefault();
                     setActiveItem((prev) => prev + 1);
                 }
 
-                if ((activeItem > 0 && event.key === "ArrowLeft") || event.key === "ArrowDown") {
+                if (currentItem > 0 && (event.key === "ArrowLeft" || event.key === "ArrowDown")) {
                     event.preventDefault();
                     setActiveItem((prev) => prev - 1);
                 }
             }
         },
-        [setActiveItem, trackIsActive, isDisabled, activeItem, constraint, positions]
+        [setActiveItem, isActive, currentItem, division, itemPositions]
     );
 
     useEffect(() => {
@@ -119,23 +114,18 @@ const Track: FC = ({
             document.removeEventListener("keydown", handleKeyDown);
             document.removeEventListener("mousedown", handleClick);
         };
-    }, [handleClick, handleResize, handleKeyDown, positions]);
+    }, [handleClick, handleResize, handleKeyDown, itemPositions]);
 
     return itemWidth ? (
         <div ref={node}>
             <motion.div
-                drag={"x"}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-                dragConstraints={node}
                 animate={controls}
-                style={{
-                    x,
-                    display: "flex",
-                    minWidth: "min-content",
-                    flexWrap: "nowrap",
-                    justifyContent: "center"
-                }}
+                className="track"
+                drag={"x"}
+                dragConstraints={node}
+                onDragEnd={handleDragEnd}
+                onDragStart={handleDragStart}
+                style={{x}}
             >
                 {children}
             </motion.div>

@@ -1,4 +1,4 @@
-import React, {useCallback, FC, useEffect, useState, useRef, useMemo} from "react";
+import React, {FC, useEffect, useState, useRef, useMemo} from "react";
 import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
 import {TrackProps} from "types";
 
@@ -6,11 +6,10 @@ const Track: FC = ({
     children,
     currentItem,
     division,
-    isActive,
     itemPositions,
     itemWidth,
-    setActiveItem,
-    setIsActive,
+    setCurrentItem,
+
     velocityMultiplier
 }: TrackProps) => {
     const [dragStartPosition, setDragStartPosition] = useState(0);
@@ -30,6 +29,7 @@ const Track: FC = ({
 
     const handleDragStart = () => setDragStartPosition(itemPositions[currentItem]);
 
+    //todo: tidy this func
     const handleDragEnd = (_event: DragEvent, info: PanInfo) => {
         const distance = info.offset.x;
         const velocity = info.velocity.x * velocityMultiplier;
@@ -46,7 +46,7 @@ const Track: FC = ({
         }, 0);
 
         if (closestPosition < itemPositions[itemPositions.length - division]) {
-            setActiveItem(itemPositions.length - division);
+            setCurrentItem(itemPositions.length - division);
             void controls.start({
                 x: itemPositions[itemPositions.length - division],
                 transition: {
@@ -55,7 +55,7 @@ const Track: FC = ({
                 }
             });
         } else {
-            setActiveItem(itemPositions.indexOf(closestPosition));
+            setCurrentItem(itemPositions.indexOf(closestPosition));
             void controls.start({
                 x: closestPosition,
                 transition: {
@@ -66,55 +66,16 @@ const Track: FC = ({
         }
     };
 
-    const handleResize = useCallback(
-        () =>
+    useEffect(() => {
+        const setCarouselPosition = () =>
             controls.start({
                 x: itemPositions[currentItem],
                 transition: {
                     ...transitionProps
                 }
-            }),
-        [currentItem, controls, itemPositions, transitionProps]
-    );
-
-    const handleClick = useCallback(
-        (event) => {
-            if (node.current === null || undefined) return;
-            setIsActive(node.current.contains(event.target));
-        },
-        [setIsActive]
-    );
-
-    const handleKeyDown = useCallback(
-        (event) => {
-            if (isActive) {
-                if (
-                    currentItem < itemPositions.length - division &&
-                    (event.key === "ArrowRight" || event.key === "ArrowUp")
-                ) {
-                    event.preventDefault();
-                    setActiveItem((prev) => prev + 1);
-                }
-
-                if (currentItem > 0 && (event.key === "ArrowLeft" || event.key === "ArrowDown")) {
-                    event.preventDefault();
-                    setActiveItem((prev) => prev - 1);
-                }
-            }
-        },
-        [setActiveItem, isActive, currentItem, division, itemPositions]
-    );
-
-    useEffect(() => {
-        void handleResize();
-
-        document.addEventListener("keydown", handleKeyDown);
-        document.addEventListener("mousedown", handleClick);
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown);
-            document.removeEventListener("mousedown", handleClick);
-        };
-    }, [handleClick, handleResize, handleKeyDown, itemPositions]);
+            });
+        void setCarouselPosition();
+    }, [transitionProps, itemPositions, currentItem, controls]);
 
     return itemWidth ? (
         <div ref={node}>

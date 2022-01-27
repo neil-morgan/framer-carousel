@@ -1,9 +1,9 @@
-import React, {FC, useState} from "react";
+import React, {FC, FocusEventHandler, KeyboardEventHandler, useState} from "react";
 import {ItemProps} from "types";
 
 const Item: FC = ({
     setIsActive,
-    setActiveItem,
+    setCurrentItem,
     currentItem,
     division,
     itemWidth,
@@ -13,20 +13,23 @@ const Item: FC = ({
     gap
 }: ItemProps) => {
     const [userDidTab, setUserDidTab] = useState(false);
-    const handleFocus: React.FocusEventHandler<HTMLDivElement> = () => setIsActive(true);
 
-    const handleBlur: React.FocusEventHandler<HTMLDivElement> = () => {
+    //todo: tidy up
+    const handleFocus: FocusEventHandler<HTMLDivElement> = () => setIsActive(true);
+
+    const handleBlur: FocusEventHandler<HTMLDivElement> = () => {
         if (userDidTab && itemIndex + 1 === itemPositions.length) setIsActive(false);
         setUserDidTab(false);
     };
 
-    const handleKeyUp: React.KeyboardEventHandler<HTMLDivElement> = (event) =>
+    const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (event) =>
         event.key === "Tab" &&
         currentItem !== itemPositions.length - division &&
-        setActiveItem(itemIndex);
+        setCurrentItem(itemIndex);
 
-    const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) =>
-        event.key === "Tab" && setUserDidTab(true);
+    const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
+        if (event.key === "Tab") setUserDidTab(true);
+    };
 
     return (
         <div

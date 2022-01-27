@@ -1,6 +1,6 @@
 export default interface ItemProps {
     setIsActive: (active: boolean) => void;
-    setActiveItem: (item: number) => void;
+    setCurrentItem: (item: number) => void;
     currentItem: number;
     division: number;
     itemWidth: number;

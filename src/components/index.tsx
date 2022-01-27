@@ -1,11 +1,15 @@
-import React, {FC, ReactNode, useMemo, useState} from "react";
+import React, {FC, ReactNode, useEffect, useMemo, useRef, useState} from "react";
+import {useResizeObserver} from "hooks";
 import {CoreProps} from "types";
 import Item from "components/item";
-import Container from "components/container";
 import Track from "components/track";
 
 const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
-    const [currentItem, setActiveItem] = useState(0);
+    const outerContainer = useRef<null | HTMLDivElement>(null);
+    const innerContainer = useRef<null | HTMLDivElement>(null);
+
+    const {width} = useResizeObserver(innerContainer);
+    const [currentItem, setCurrentItem] = useState(0);
     const [division, setDivision] = useState(3);
     const [isActive, setIsActive] = useState(false);
     const [itemWidth, setItemWidth] = useState(0);
@@ -16,15 +20,40 @@ const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
         [children, itemWidth]
     );
 
-    const containerProps = {
-        division,
-        gap,
-        itemPositions,
-        setActiveItem,
-        setDivision,
-        setItemWidth,
-        setVelocityMultiplier
-    };
+    useEffect(() => {
+        setItemWidth(Math.round(width) / division);
+        setVelocityMultiplier(0.35);
+        setDivision(3);
+    }, [division, itemPositions.length, setItemWidth, setVelocityMultiplier, width]);
+
+    useEffect(() => {
+        const handleClick = (event: MouseEvent) => {
+            if (outerContainer.current === null || undefined) return;
+            setIsActive(outerContainer.current.contains(event.target as Node));
+        };
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (isActive) {
+                event.preventDefault();
+                //todo: see if can tidy up here
+                if (
+                    currentItem < itemPositions.length - division &&
+                    (event.key === "ArrowRight" || event.key === "ArrowUp")
+                )
+                    setCurrentItem(currentItem + 1);
+
+                if (currentItem > 0 && (event.key === "ArrowLeft" || event.key === "ArrowDown"))
+                    setCurrentItem(currentItem - 1);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        document.addEventListener("mousedown", handleClick);
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener("mousedown", handleClick);
+        };
+    }, [currentItem, division, isActive, itemPositions.length]);
 
     const trackProps = {
         currentItem,
@@ -32,7 +61,7 @@ const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
         itemWidth,
         velocityMultiplier,
         itemPositions,
-        setActiveItem,
+        setCurrentItem,
         setIsActive,
         isActive
     };
@@ -43,24 +72,34 @@ const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
         gap,
         itemWidth,
         itemPositions,
-        setActiveItem,
+        setCurrentItem,
         setIsActive,
         isActive
     };
 
     return (
-        <Container {...containerProps}>
-            <Track {...trackProps}>
-                {children.map((child: ReactNode, index: number) => {
-                    const currentItemProps = {...itemProps, itemIndex: index};
-                    return (
-                        <Item {...currentItemProps} key={index}>
-                            {child}
-                        </Item>
-                    );
-                })}
-            </Track>
-        </Container>
+        <div
+            className="container"
+            ref={outerContainer}
+            style={{paddingTop: `${gap / 2}px`, paddingBottom: `${gap / 2}px`}}
+        >
+            <div
+                className="container-inner"
+                ref={innerContainer}
+                style={{marginLeft: `-${gap / 2}px`, width: `calc(100% + ${gap}px)`}}
+            >
+                <Track {...trackProps}>
+                    {children.map((child: ReactNode, index: number) => {
+                        const currentItemProps = {...itemProps, itemIndex: index};
+                        return (
+                            <Item {...currentItemProps} key={index}>
+                                {child}
+                            </Item>
+                        );
+                    })}
+                </Track>
+            </div>
+        </div>
     );
 };
 

@@ -12,16 +12,20 @@
 .item {
     display: flex;
     outline: none;
+    overflow: hidden;
+
     &:hover {
         cursor: grab;
+    }
+
+    &:active {
+        cursor: grabbing;
     }
 
     &-inner {
         display: flex;
         width: 100%;
-        &:active {
-            cursor: grabbing;
-        }
+        overflow: hidden;
     }
 }
 

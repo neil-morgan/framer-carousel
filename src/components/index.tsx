@@ -1,10 +1,18 @@
-import React, {FC, ReactNode, useEffect, useMemo, useRef, useState} from "react";
+import React, {
+    FC,
+    // KeyboardEventHandler,
+    ReactNode,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import {useResizeObserver} from "hooks";
 import {CoreProps} from "types";
 import Item from "components/item";
 import Track from "components/track";
 
-const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
+const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
     const outerContainer = useRef<null | HTMLDivElement>(null);
     const innerContainer = useRef<null | HTMLDivElement>(null);
 
@@ -34,16 +42,20 @@ const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (isActive) {
-                event.preventDefault();
-                //todo: see if can tidy up here
-                if (
-                    currentItem < itemPositions.length - division &&
-                    (event.key === "ArrowRight" || event.key === "ArrowUp")
-                )
-                    setCurrentItem(currentItem + 1);
+                const {key} = event;
 
-                if (currentItem > 0 && (event.key === "ArrowLeft" || event.key === "ArrowDown"))
+                if (
+                    (key === "ArrowRight" || key === "ArrowUp" || key === "Tab") &&
+                    currentItem < itemPositions.length - division
+                ) {
+                    event.preventDefault();
+                    setCurrentItem(currentItem + 1);
+                }
+
+                if ((key === "ArrowLeft" || key === "ArrowDown") && currentItem > 0) {
+                    event.preventDefault();
                     setCurrentItem(currentItem - 1);
+                }
             }
         };
 
@@ -62,6 +74,7 @@ const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
         velocityMultiplier,
         itemPositions,
         setCurrentItem,
+        innerContainer,
         setIsActive,
         isActive
     };
@@ -70,19 +83,16 @@ const FramerCarousel: FC = ({children, gap = 4}: CoreProps) => {
         currentItem,
         division,
         gap,
-        itemWidth,
+        isActive,
         itemPositions,
+        itemWidth,
+        radius,
         setCurrentItem,
-        setIsActive,
-        isActive
+        setIsActive
     };
 
     return (
-        <div
-            className="container"
-            ref={outerContainer}
-            style={{paddingTop: `${gap / 2}px`, paddingBottom: `${gap / 2}px`}}
-        >
+        <div className="container" ref={outerContainer} style={{borderRadius: `${radius}px`}}>
             <div
                 className="container-inner"
                 ref={innerContainer}

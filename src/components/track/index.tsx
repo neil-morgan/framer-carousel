@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState, useRef, useMemo} from "react";
+import React, {FC, useEffect, useState, useMemo} from "react";
 import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
 import {TrackProps} from "types";
 
@@ -9,13 +9,12 @@ const Track: FC = ({
     itemPositions,
     itemWidth,
     setCurrentItem,
-
+    innerContainer,
     velocityMultiplier
 }: TrackProps) => {
     const [dragStartPosition, setDragStartPosition] = useState(0);
     const controls = useAnimation();
     const x = useMotionValue(0);
-    const node = useRef<null | HTMLDivElement>(null);
 
     const transitionProps = useMemo(
         () => ({
@@ -39,14 +38,18 @@ const Track: FC = ({
             dragStartPosition +
             (direction === 1 ? Math.min(velocity, distance) : Math.max(velocity, distance));
 
-        const closestPosition = itemPositions.reduce((prev, curr) => {
-            return Math.abs(curr - extrapolatedPosition) < Math.abs(prev - extrapolatedPosition)
-                ? curr
-                : prev;
-        }, 0);
+        const closestPosition = itemPositions.reduce(
+            (prev, curr) =>
+                Math.abs(curr - extrapolatedPosition) < Math.abs(prev - extrapolatedPosition)
+                    ? curr
+                    : prev,
+            0
+        );
 
+        //todo: look at simplifying this
         if (closestPosition < itemPositions[itemPositions.length - division]) {
             setCurrentItem(itemPositions.length - division);
+            //if end of arr
             void controls.start({
                 x: itemPositions[itemPositions.length - division],
                 transition: {
@@ -67,30 +70,28 @@ const Track: FC = ({
     };
 
     useEffect(() => {
-        const setCarouselPosition = () =>
+        const updateCarouselPosition = async () =>
             controls.start({
                 x: itemPositions[currentItem],
                 transition: {
                     ...transitionProps
                 }
             });
-        void setCarouselPosition();
-    }, [transitionProps, itemPositions, currentItem, controls]);
+        void updateCarouselPosition();
+    }, [controls, currentItem, itemPositions, transitionProps]);
 
     return itemWidth ? (
-        <div ref={node}>
-            <motion.div
-                animate={controls}
-                className="track"
-                drag={"x"}
-                dragConstraints={node}
-                onDragEnd={handleDragEnd}
-                onDragStart={handleDragStart}
-                style={{x}}
-            >
-                {children}
-            </motion.div>
-        </div>
+        <motion.div
+            animate={controls}
+            className="track"
+            style={{x}}
+            drag={"x"}
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+            dragConstraints={innerContainer}
+        >
+            {children}
+        </motion.div>
     ) : (
         <></>
     );

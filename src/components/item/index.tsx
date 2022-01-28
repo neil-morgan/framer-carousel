@@ -1,56 +1,41 @@
-import React, {FC, FocusEventHandler, KeyboardEventHandler, useState} from "react";
+import React, {FC, useRef, useEffect} from "react";
 import {ItemProps} from "types";
 
 const Item: FC = ({
-    setIsActive,
-    setCurrentItem,
-    currentItem,
-    division,
-    itemWidth,
-    itemPositions,
     children,
+    currentItem,
+    setCurrentItem,
+    gap,
     itemIndex,
-    gap
+    itemWidth,
+    setIsActive,
+    radius
 }: ItemProps) => {
-    const [userDidTab, setUserDidTab] = useState(false);
+    const currentItemRef = useRef<null | HTMLDivElement>(null);
 
-    //todo: tidy up
-    const handleFocus: FocusEventHandler<HTMLDivElement> = () => setIsActive(true);
-
-    const handleBlur: FocusEventHandler<HTMLDivElement> = () => {
-        if (userDidTab && itemIndex + 1 === itemPositions.length) setIsActive(false);
-        setUserDidTab(false);
+    const handleFocus = () => {
+        setIsActive(true);
+        if (itemIndex === 0) setCurrentItem(0);
     };
 
-    const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (event) =>
-        event.key === "Tab" &&
-        currentItem !== itemPositions.length - division &&
-        setCurrentItem(itemIndex);
-
-    const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
-        if (event.key === "Tab") setUserDidTab(true);
-    };
+    useEffect(() => {
+        if (currentItem === itemIndex) currentItemRef?.current?.focus();
+    }, [currentItem, itemIndex]);
 
     return (
         <div
             className="item"
-            onBlur={handleBlur}
+            ref={currentItemRef}
             onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
-            onKeyUp={handleKeyUp}
             role="button"
             style={{
-                width: `${itemWidth}px`
+                width: `${itemWidth}px`,
+                paddingLeft: `${gap / 2}px`,
+                paddingRight: `${gap / 2}px`
             }}
             tabIndex={0}
         >
-            <div
-                className="item-inner"
-                style={{
-                    paddingLeft: `${gap / 2}px`,
-                    paddingRight: `${gap / 2}px`
-                }}
-            >
+            <div className="item-inner" style={{borderRadius: `${radius}px`}}>
                 {children}
             </div>
         </div>

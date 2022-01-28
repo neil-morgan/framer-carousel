@@ -1,11 +1,12 @@
 export default interface ItemProps {
-    setIsActive: (active: boolean) => void;
-    setCurrentItem: (item: number) => void;
+    children: React.ReactNode;
     currentItem: number;
     division: number;
-    itemWidth: number;
-    itemPositions: number[];
-    children: React.ReactNode;
-    itemIndex: number;
     gap: number;
+    itemIndex: number;
+    itemPositions: number[];
+    itemWidth: number;
+    radius: number;
+    setCurrentItem: (item: number) => void;
+    setIsActive: (active: boolean) => void;
 }

@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useCallback, useEffect, useState} from "react";
 import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
 import {TrackProps} from "types";
 
@@ -15,15 +15,29 @@ const Track: FC = ({
     const controls = useAnimation();
     const x = useMotionValue(0);
 
+    const updateCarouselPosition = useCallback(
+        () =>
+            controls.start({
+                x: itemPositions[currentItem],
+                transition: {
+                    stiffness: 400,
+                    type: "spring",
+                    damping: 60,
+                    mass: 3
+                }
+            }),
+        [controls, currentItem, itemPositions]
+    );
+
     const handleDragEnd = (_event: DragEvent, info: PanInfo) => {
-        const dragDistance = info.offset.x;
-        const dragVelocity = info.velocity.x * velocityMultiplier;
+        const distance = info.offset.x;
+        const velocity = info.velocity.x * velocityMultiplier;
 
         const extrapolatedPosition =
             dragStartPosition +
-            (dragVelocity < 0 || dragDistance < 0
-                ? Math.min(dragVelocity, dragDistance)
-                : Math.max(dragVelocity, dragDistance));
+            (velocity < 0 || distance < 0
+                ? Math.min(velocity, distance)
+                : Math.max(velocity, distance));
 
         const closestItemPosition = itemPositions.reduce(
             (prev, curr) =>
@@ -32,6 +46,8 @@ const Track: FC = ({
                     : prev,
             0
         );
+
+        void updateCarouselPosition();
 
         setCurrentItem(
             closestItemPosition < itemPositions[itemPositions.length - division]
@@ -42,19 +58,10 @@ const Track: FC = ({
 
     const handleDragStart = () => setDragStartPosition(itemPositions[currentItem]);
 
-    useEffect(() => {
-        const updateCarouselPosition = async () =>
-            controls.start({
-                x: itemPositions[currentItem],
-                transition: {
-                    damping: 60,
-                    mass: 3,
-                    stiffness: 400,
-                    type: "spring"
-                }
-            });
-        void updateCarouselPosition();
-    }, [controls, currentItem, itemPositions]);
+    useEffect(
+        () => void updateCarouselPosition(),
+        [controls, currentItem, itemPositions, updateCarouselPosition]
+    );
 
     return (
         <motion.div

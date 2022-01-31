@@ -57,7 +57,7 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
         setItemWidth(Math.round(width) / division);
         setVelocityMultiplier(0.35);
         setDivision(3);
-    }, [division, , setItemWidth, setVelocityMultiplier, width]);
+    }, [division, setItemWidth, setVelocityMultiplier, width]);
 
     const trackProps = {
         currentItem,

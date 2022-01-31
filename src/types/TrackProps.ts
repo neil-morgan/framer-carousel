@@ -1,11 +1,11 @@
-import React from "react";
+import type {MutableRefObject} from "react";
 
-export default interface TrackProps {
+export type TrackProps = {
     children: React.ReactNode;
     currentItem: number;
     division: number;
-    innerContainer: React.MutableRefObject<HTMLDivElement>;
+    innerContainer: MutableRefObject<HTMLDivElement | null>;
     itemPositions: number[];
     setCurrentItem: (item: number | ((prev: number) => number)) => void;
     velocityMultiplier: number;
-}
+};

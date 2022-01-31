@@ -1,5 +1,3 @@
-import CoreProps from "./CoreProps";
-import ItemProps from "./ItemProps";
-import TrackProps from "./TrackProps";
-
-export {CoreProps, ItemProps, TrackProps};
+export {CoreProps} from "./CoreProps";
+export {ItemProps} from "./ItemProps";
+export {TrackProps} from "./TrackProps";

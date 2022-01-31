@@ -1,7 +1,7 @@
-import {ReactNode} from "react";
+import type {ReactNode} from "react";
 
-export default interface CoreProps {
+export type CoreProps = {
     children: ReactNode[];
     gap?: number;
     radius?: number;
-}
+};

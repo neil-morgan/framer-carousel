@@ -1,8 +1,10 @@
-import React, {FC, useCallback, useEffect, useState} from "react";
-import {useAnimation, motion, useMotionValue, PanInfo} from "framer-motion";
-import {TrackProps} from "types";
+import type {PanInfo} from "framer-motion";
+import {useAnimation, motion, useMotionValue} from "framer-motion";
+import type {ReactElement} from "react";
+import React, {useCallback, useEffect, useState} from "react";
+import type {TrackProps} from "types";
 
-const Track: FC = ({
+export function Track({
     children,
     currentItem,
     division,
@@ -10,7 +12,7 @@ const Track: FC = ({
     itemPositions,
     setCurrentItem,
     velocityMultiplier
-}: TrackProps) => {
+}: TrackProps): ReactElement {
     const [dragStartPosition, setDragStartPosition] = useState(0);
     const controls = useAnimation();
     const x = useMotionValue(0);
@@ -56,7 +58,9 @@ const Track: FC = ({
         );
     };
 
-    const handleDragStart = () => setDragStartPosition(itemPositions[currentItem]);
+    const handleDragStart = () => {
+        setDragStartPosition(itemPositions[currentItem]);
+    };
 
     useEffect(
         () => void updateCarouselPosition(),
@@ -67,7 +71,7 @@ const Track: FC = ({
         <motion.div
             animate={controls}
             className="track"
-            drag={"x"}
+            drag="x"
             dragConstraints={innerContainer}
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
@@ -76,6 +80,4 @@ const Track: FC = ({
             {children}
         </motion.div>
     );
-};
-
-export default Track;
+}

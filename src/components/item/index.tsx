@@ -1,7 +1,8 @@
-import React, {FC, KeyboardEventHandler, useRef, useEffect} from "react";
-import {ItemProps} from "types";
+import type {ReactElement, KeyboardEventHandler} from "react";
+import React, {useRef, useEffect} from "react";
+import type {ItemProps} from "types";
 
-const Item: FC = ({
+export function Item({
     children,
     currentItem,
     gap,
@@ -11,7 +12,7 @@ const Item: FC = ({
     itemPositions,
     division,
     setCurrentItem
-}: ItemProps) => {
+}: ItemProps): ReactElement {
     const currentItemRef = useRef<null | HTMLDivElement>(null);
 
     const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (event) => {
@@ -26,7 +27,9 @@ const Item: FC = ({
     };
 
     useEffect(() => {
-        if (currentItem === itemIndex) currentItemRef?.current?.focus();
+        if (currentItem === itemIndex) {
+            currentItemRef.current?.focus();
+        }
     }, [currentItem, itemIndex]);
 
     return (
@@ -48,6 +51,4 @@ const Item: FC = ({
             </div>
         </div>
     );
-};
-
-export default Item;
+}

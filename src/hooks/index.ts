@@ -1,3 +1,1 @@
-import useResizeObserver from "./useResizeObserver";
-
-export {useResizeObserver};
+export {useResizeObserver} from "./useResizeObserver";

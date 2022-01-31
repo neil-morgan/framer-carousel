@@ -1,4 +1,4 @@
-export default interface ItemProps {
+export type ItemProps = {
     children: React.ReactNode;
     currentItem: number;
     division: number;
@@ -8,4 +8,4 @@ export default interface ItemProps {
     itemWidth: number;
     radius: number;
     setCurrentItem: (item: number) => void;
-}
+};

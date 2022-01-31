@@ -1,12 +1,13 @@
-import React, {FC, ReactNode, useEffect, useMemo, useRef, useState} from "react";
+import {Item} from "components/item";
+import {Track} from "components/track";
 import {useResizeObserver} from "hooks";
-import {CoreProps} from "types";
-import Item from "components/item";
-import Track from "components/track";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import type {ReactElement, ReactNode} from "react";
+import type {CoreProps} from "types";
 
-const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
-    const outerContainer = useRef<null | HTMLDivElement>(null);
-    const innerContainer = useRef<null | HTMLDivElement>(null);
+export function FramerCarousel({children, gap = 4, radius = 7}: CoreProps): ReactElement {
+    const outerContainer = useRef<HTMLDivElement | null>(null);
+    const innerContainer = useRef<HTMLDivElement | null>(null);
 
     const {width} = useResizeObserver(innerContainer);
     const [currentItem, setCurrentItem] = useState(0);
@@ -22,7 +23,9 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
 
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
-            if (outerContainer.current === null || undefined) return;
+            if (outerContainer.current === null) {
+                return;
+            }
             setIsActive(outerContainer.current.contains(event.target as Node));
         };
 
@@ -89,7 +92,8 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
                     {children.map((child: ReactNode, index: number) => {
                         const currentItemProps = {...itemProps, itemIndex: index};
                         return (
-                            <Item {...currentItemProps} key={index}>
+                            // eslint-disable-next-line react/no-array-index-key
+                            <Item key={index} {...currentItemProps}>
                                 {child}
                             </Item>
                         );
@@ -98,6 +102,4 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
             </div>
         </div>
     );
-};
-
-export default FramerCarousel;
+}

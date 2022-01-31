@@ -1,9 +1,10 @@
-import {RefObject, useEffect, useState} from "react";
+import type {RefObject} from "react";
+import {useEffect, useState} from "react";
 import ResizeObserver from "resize-observer-polyfill";
 
 type BoundingRect = Omit<DOMRectReadOnly, "toJSON">;
 
-const useResizeObserver = <T extends HTMLElement>(target: RefObject<T>) => {
+export const useResizeObserver = <T extends HTMLElement>(target: RefObject<T>): BoundingRect => {
     const [state, setState] = useState<BoundingRect>({
         bottom: 0,
         height: 0,
@@ -16,15 +17,17 @@ const useResizeObserver = <T extends HTMLElement>(target: RefObject<T>) => {
     });
 
     useEffect(() => {
-        if (!target.current) return;
-        const observer = new ResizeObserver(([entry]: ResizeObserverEntry[]) =>
-            setState(entry.contentRect)
-        );
+        if (!target.current) {
+            return;
+        }
+        const observer = new ResizeObserver(([entry]: ResizeObserverEntry[]) => {
+            setState(entry.contentRect);
+        });
         observer.observe(target.current);
-        return () => observer.disconnect();
+        return () => {
+            observer.disconnect();
+        };
     }, [target]);
 
     return state;
 };
-
-export default useResizeObserver;

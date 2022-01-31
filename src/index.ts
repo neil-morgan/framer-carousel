@@ -1,3 +1,4 @@
 import "./styles.scss";
-import FramerCarousel from "./components";
-export default FramerCarousel;
+
+// eslint-disable-next-line import/no-default-export
+export {FramerCarousel as default} from "components";

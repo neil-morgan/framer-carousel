@@ -1,8 +1,9 @@
+import type {ReactElement} from "react";
 import React from "react";
 
-interface IconProps {
+type IconProps = {
     style: string;
-}
+};
 
 const paths = {
     "arrow-left":
@@ -15,14 +16,14 @@ const paths = {
         "M7.4751,16.6494a.6.6,0,0,1-.4243-1.0234L12.6768,10,7.0508,4.3745a.6.6,0,1,1,.8486-.8486l6.05,6.05a.6.6,0,0,1,0,.8486l-6.05,6.0493A.5986.5986,0,0,1,7.4751,16.6494Z"
 };
 
-const Icon: React.FC<IconProps> = ({style}: IconProps) => (
-    <svg
-        style={{display: "block", height: "1em", width: "1em", lineHeight: "1em"}}
-        fill="currentColor"
-        viewBox="0 0 20 20"
-    >
-        <path d={paths[style]} />
-    </svg>
-);
-
-export default Icon;
+export function Icon({style}: IconProps): ReactElement {
+    return (
+        <svg
+            style={{display: "block", height: "1em", width: "1em", lineHeight: "1em"}}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+        >
+            <path d={paths[style]} />
+        </svg>
+    );
+}

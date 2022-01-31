@@ -1,21 +1,28 @@
-import React, {FC, useRef, useEffect} from "react";
+import React, {FC, KeyboardEventHandler, useRef, useEffect} from "react";
 import {ItemProps} from "types";
 
 const Item: FC = ({
     children,
     currentItem,
-    setCurrentItem,
     gap,
     itemIndex,
     itemWidth,
-    setIsActive,
-    radius
+    radius,
+    itemPositions,
+    division,
+    setCurrentItem
 }: ItemProps) => {
     const currentItemRef = useRef<null | HTMLDivElement>(null);
 
-    const handleFocus = () => {
-        setIsActive(true);
-        if (itemIndex === 0) setCurrentItem(0);
+    const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (event) => {
+        if (event.key === "Tab") {
+            if (currentItem < itemPositions.length - division) {
+                setCurrentItem(itemIndex);
+            }
+            if (itemIndex === 0) {
+                setCurrentItem(0);
+            }
+        }
     };
 
     useEffect(() => {
@@ -24,9 +31,10 @@ const Item: FC = ({
 
     return (
         <div
+            id={itemIndex.toString()}
             className="item"
             ref={currentItemRef}
-            onFocus={handleFocus}
+            onKeyUp={handleKeyUp}
             role="button"
             style={{
                 width: `${itemWidth}px`,

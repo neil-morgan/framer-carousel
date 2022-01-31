@@ -8,5 +8,4 @@ export default interface ItemProps {
     itemWidth: number;
     radius: number;
     setCurrentItem: (item: number) => void;
-    setIsActive: (active: boolean) => void;
 }

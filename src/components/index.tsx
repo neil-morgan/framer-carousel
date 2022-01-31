@@ -1,12 +1,4 @@
-import React, {
-    FC,
-    // KeyboardEventHandler,
-    ReactNode,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import React, {FC, ReactNode, useEffect, useMemo, useRef, useState} from "react";
 import {useResizeObserver} from "hooks";
 import {CoreProps} from "types";
 import Item from "components/item";
@@ -29,12 +21,6 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
     );
 
     useEffect(() => {
-        setItemWidth(Math.round(width) / division);
-        setVelocityMultiplier(0.35);
-        setDivision(3);
-    }, [division, itemPositions.length, setItemWidth, setVelocityMultiplier, width]);
-
-    useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             if (outerContainer.current === null || undefined) return;
             setIsActive(outerContainer.current.contains(event.target as Node));
@@ -45,7 +31,7 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
                 const {key} = event;
 
                 if (
-                    (key === "ArrowRight" || key === "ArrowUp" || key === "Tab") &&
+                    (key === "ArrowRight" || key === "ArrowUp") &&
                     currentItem < itemPositions.length - division
                 ) {
                     event.preventDefault();
@@ -67,28 +53,29 @@ const FramerCarousel: FC = ({children, gap = 4, radius = 7}: CoreProps) => {
         };
     }, [currentItem, division, isActive, itemPositions.length]);
 
+    useEffect(() => {
+        setItemWidth(Math.round(width) / division);
+        setVelocityMultiplier(0.35);
+        setDivision(3);
+    }, [division, , setItemWidth, setVelocityMultiplier, width]);
+
     const trackProps = {
         currentItem,
         division,
-        itemWidth,
-        velocityMultiplier,
+        innerContainer,
         itemPositions,
         setCurrentItem,
-        innerContainer,
-        setIsActive,
-        isActive
+        velocityMultiplier
     };
 
     const itemProps = {
         currentItem,
-        division,
         gap,
-        isActive,
-        itemPositions,
         itemWidth,
         radius,
-        setCurrentItem,
-        setIsActive
+        itemPositions,
+        division,
+        setCurrentItem
     };
 
     return (

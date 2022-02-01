@@ -18,4 +18,5 @@ const config = {
     external: ["react", "react-dom", "framer-motion", "resize-observer-polyfill"]
 };
 
+// eslint-disable-next-line import/no-default-export
 export default config;

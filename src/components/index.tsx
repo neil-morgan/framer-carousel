@@ -4,8 +4,17 @@ import {useResizeObserver} from "hooks";
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import type {ReactElement, ReactNode} from "react";
 import type {CoreProps} from "types";
+import {getVelocityMultiplier} from "utils";
 
-export function FramerCarousel({children, gap = 4, radius = 7}: CoreProps): ReactElement {
+export function FramerCarousel({
+    children,
+    gap = 4,
+    radius = 7,
+    velocityMaxMultiplier = 0.35,
+    velocityMaxWidth = 1200,
+    velocityMinMultiplier = 0.65,
+    velocityMinWidth = 600
+}: CoreProps): ReactElement {
     const outerContainer = useRef<HTMLDivElement | null>(null);
     const innerContainer = useRef<HTMLDivElement | null>(null);
 
@@ -14,21 +23,11 @@ export function FramerCarousel({children, gap = 4, radius = 7}: CoreProps): Reac
     const [division, setDivision] = useState(3);
     const [isActive, setIsActive] = useState(false);
     const [itemWidth, setItemWidth] = useState(0);
-    const [velocityMultiplier, setVelocityMultiplier] = useState(0.35);
 
     const itemPositions = useMemo(
         () => children.map((_: string, index: number) => -Math.abs(itemWidth * index)),
         [children, itemWidth]
     );
-
-    // const max = 1200;
-    // const min = 600;
-    // const base = 0.35;
-
-    // if (width < max && width > min) {
-    //     // eslint-disable-next-line no-console
-    //     console.log(base + (max - width) / 15 / 100);
-    // }
 
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
@@ -67,9 +66,8 @@ export function FramerCarousel({children, gap = 4, radius = 7}: CoreProps): Reac
 
     useEffect(() => {
         setItemWidth(Math.round(width) / division);
-        setVelocityMultiplier(0.35);
         setDivision(3);
-    }, [division, setItemWidth, setVelocityMultiplier, width]);
+    }, [division, setItemWidth, width]);
 
     const trackProps = {
         currentItem,
@@ -77,7 +75,13 @@ export function FramerCarousel({children, gap = 4, radius = 7}: CoreProps): Reac
         innerContainer,
         itemPositions,
         setCurrentItem,
-        velocityMultiplier
+        velocityMultiplier: getVelocityMultiplier(
+            velocityMaxMultiplier,
+            velocityMaxWidth,
+            velocityMinMultiplier,
+            velocityMinWidth,
+            width
+        )
     };
 
     const itemProps = {

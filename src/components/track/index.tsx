@@ -35,7 +35,7 @@ export function Track({
         const distance = info.offset.x;
         const velocity = info.velocity.x * velocityMultiplier;
 
-        const extrapolatedPosition =
+        const extrapolatedItemPosition =
             dragStartPosition +
             (velocity < 0 || distance < 0
                 ? Math.min(velocity, distance)
@@ -43,19 +43,23 @@ export function Track({
 
         const closestItemPosition = itemPositions.reduce(
             (prev, curr) =>
-                Math.abs(curr - extrapolatedPosition) < Math.abs(prev - extrapolatedPosition)
+                Math.abs(curr - extrapolatedItemPosition) <
+                Math.abs(prev - extrapolatedItemPosition)
                     ? curr
                     : prev,
             0
         );
 
-        void updateCarouselPosition();
-
-        setCurrentItem(
+        const newItemPosition =
             closestItemPosition < itemPositions[itemPositions.length - division]
                 ? itemPositions.length - division
-                : itemPositions.indexOf(closestItemPosition)
-        );
+                : itemPositions.indexOf(closestItemPosition);
+
+        if (newItemPosition === currentItem) {
+            void updateCarouselPosition();
+        } else {
+            setCurrentItem(newItemPosition);
+        }
     };
 
     const handleDragStart = () => {

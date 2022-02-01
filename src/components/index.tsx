@@ -21,6 +21,15 @@ export function FramerCarousel({children, gap = 4, radius = 7}: CoreProps): Reac
         [children, itemWidth]
     );
 
+    // const max = 1200;
+    // const min = 600;
+    // const base = 0.35;
+
+    // if (width < max && width > min) {
+    //     // eslint-disable-next-line no-console
+    //     console.log(base + (max - width) / 15 / 100);
+    // }
+
     useEffect(() => {
         const handleClick = (event: MouseEvent) => {
             if (outerContainer.current === null) {

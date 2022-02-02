@@ -4,6 +4,7 @@ export type CoreProps = {
     children: ReactNode[];
     gap?: number;
     radius?: number;
+    responsive?: object;
     velocityMaxMultiplier: number;
     velocityMaxWidth: number;
     velocityMinMultiplier: number;

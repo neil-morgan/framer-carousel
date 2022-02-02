@@ -13,7 +13,11 @@ export function FramerCarousel({
     velocityMaxMultiplier = 0.35,
     velocityMaxWidth = 1200,
     velocityMinMultiplier = 0.65,
-    velocityMinWidth = 600
+    velocityMinWidth = 600,
+    responsive = {
+        0: {items: 1, gap: 4},
+        600: {items: 3, gap: 8}
+    }
 }: CoreProps): ReactElement {
     const outerContainer = useRef<HTMLDivElement | null>(null);
     const innerContainer = useRef<HTMLDivElement | null>(null);
@@ -24,9 +28,20 @@ export function FramerCarousel({
     const [isActive, setIsActive] = useState(false);
     const [itemWidth, setItemWidth] = useState(0);
 
+    // eslint-disable-next-line no-console
+    console.log(responsive);
+
     const itemPositions = useMemo(
         () => children.map((_: string, index: number) => -Math.abs(itemWidth * index)),
         [children, itemWidth]
+    );
+
+    const velocityMultiplier = getVelocityMultiplier(
+        velocityMaxMultiplier,
+        velocityMaxWidth,
+        velocityMinMultiplier,
+        velocityMinWidth,
+        width
     );
 
     useEffect(() => {
@@ -39,17 +54,17 @@ export function FramerCarousel({
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (isActive) {
-                const {key} = event;
+                const {code} = event;
 
                 if (
-                    (key === "ArrowRight" || key === "ArrowUp") &&
+                    (code === "ArrowRight" || code === "ArrowUp" || code === "Space") &&
                     currentItem < itemPositions.length - division
                 ) {
                     event.preventDefault();
                     setCurrentItem(currentItem + 1);
                 }
 
-                if ((key === "ArrowLeft" || key === "ArrowDown") && currentItem > 0) {
+                if ((code === "ArrowLeft" || code === "ArrowDown") && currentItem > 0) {
                     event.preventDefault();
                     setCurrentItem(currentItem - 1);
                 }
@@ -75,13 +90,7 @@ export function FramerCarousel({
         innerContainer,
         itemPositions,
         setCurrentItem,
-        velocityMultiplier: getVelocityMultiplier(
-            velocityMaxMultiplier,
-            velocityMaxWidth,
-            velocityMinMultiplier,
-            velocityMinWidth,
-            width
-        )
+        velocityMultiplier
     };
 
     const itemProps = {

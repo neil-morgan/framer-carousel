@@ -1,4 +1,4 @@
-import {getVelocityMultiplier} from "utils";
+import {getVelocityMultiplier} from "../utils";
 
 const velocityMaxMultiplier = 0.35;
 const velocityMaxWidth = 1200;

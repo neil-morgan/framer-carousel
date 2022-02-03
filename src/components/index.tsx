@@ -5,31 +5,32 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import type {ReactElement, ReactNode} from "react";
 import type {CoreProps} from "types";
 import {getVelocityMultiplier} from "utils";
+import {v4 as uuidv4} from "uuid";
 
 export function FramerCarousel({
     children,
-    gap = 4,
     radius = 7,
     velocityMaxMultiplier = 0.35,
     velocityMaxWidth = 1200,
-    velocityMinMultiplier = 0.65,
-    velocityMinWidth = 600,
-    responsive = {
-        0: {items: 1, gap: 4},
-        600: {items: 3, gap: 8}
-    }
-}: CoreProps): ReactElement {
-    const outerContainer = useRef<HTMLDivElement | null>(null);
+    velocityMinMultiplier = 0.35,
+    velocityMinWidth = 600
+}: // responsive = {
+//     0: {items: 1, gap: 3},
+//     640: {items: 2, gap: 4},
+//     768: {items: 3, gap: 5},
+//     1024: {items: 4, gap: 6}
+// }
+CoreProps): ReactElement {
     const innerContainer = useRef<HTMLDivElement | null>(null);
+    const outerContainer = useRef<HTMLDivElement | null>(null);
 
     const {width} = useResizeObserver(innerContainer);
     const [currentItem, setCurrentItem] = useState(0);
-    const [division, setDivision] = useState(3);
     const [isActive, setIsActive] = useState(false);
     const [itemWidth, setItemWidth] = useState(0);
-
-    // eslint-disable-next-line no-console
-    console.log(responsive);
+    const items = 2;
+    const gap = 20;
+    // const {items, gap} = responsive[useBreakpoints(responsive).active];
 
     const itemPositions = useMemo(
         () => children.map((_: string, index: number) => -Math.abs(itemWidth * index)),
@@ -58,15 +59,15 @@ export function FramerCarousel({
 
                 if (
                     (code === "ArrowRight" || code === "ArrowUp" || code === "Space") &&
-                    currentItem < itemPositions.length - division
+                    currentItem < itemPositions.length - items
                 ) {
                     event.preventDefault();
-                    setCurrentItem(currentItem + 1);
+                    setCurrentItem((prev) => prev + 1);
                 }
 
                 if ((code === "ArrowLeft" || code === "ArrowDown") && currentItem > 0) {
                     event.preventDefault();
-                    setCurrentItem(currentItem - 1);
+                    setCurrentItem((prev) => prev - 1);
                 }
             }
         };
@@ -77,16 +78,15 @@ export function FramerCarousel({
             document.removeEventListener("keydown", handleKeyDown);
             document.removeEventListener("mousedown", handleClick);
         };
-    }, [currentItem, division, isActive, itemPositions.length]);
+    }, [currentItem, items, isActive, itemPositions.length]);
 
     useEffect(() => {
-        setItemWidth(Math.round(width) / division);
-        setDivision(3);
-    }, [division, setItemWidth, width]);
+        setItemWidth(Math.round(width) / items);
+    }, [items, setItemWidth, width]);
 
     const trackProps = {
         currentItem,
-        division,
+        items,
         innerContainer,
         itemPositions,
         setCurrentItem,
@@ -99,7 +99,7 @@ export function FramerCarousel({
         itemWidth,
         radius,
         itemPositions,
-        division,
+        items,
         setCurrentItem
     };
 
@@ -114,8 +114,7 @@ export function FramerCarousel({
                     {children.map((child: ReactNode, index: number) => {
                         const currentItemProps = {...itemProps, itemIndex: index};
                         return (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <Item key={index} {...currentItemProps}>
+                            <Item key={uuidv4()} {...currentItemProps}>
                                 {child}
                             </Item>
                         );

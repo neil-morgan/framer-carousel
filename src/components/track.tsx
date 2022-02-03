@@ -7,7 +7,7 @@ import type {TrackProps} from "types";
 export function Track({
     children,
     currentItem,
-    division,
+    items,
     innerContainer,
     itemPositions,
     setCurrentItem,
@@ -51,8 +51,8 @@ export function Track({
         );
 
         const newItemPosition =
-            closestItemPosition < itemPositions[itemPositions.length - division]
-                ? itemPositions.length - division
+            closestItemPosition < itemPositions[itemPositions.length - items]
+                ? itemPositions.length - items
                 : itemPositions.indexOf(closestItemPosition);
 
         if (newItemPosition === currentItem) {
@@ -66,10 +66,7 @@ export function Track({
         setDragStartPosition(itemPositions[currentItem]);
     };
 
-    useEffect(
-        () => void updateCarouselPosition(),
-        [controls, currentItem, itemPositions, updateCarouselPosition]
-    );
+    useEffect(() => void updateCarouselPosition(), [updateCarouselPosition]);
 
     return (
         <motion.div

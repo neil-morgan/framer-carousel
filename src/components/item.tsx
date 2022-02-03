@@ -10,14 +10,14 @@ export function Item({
     itemWidth,
     radius,
     itemPositions,
-    division,
+    items,
     setCurrentItem
 }: ItemProps): ReactElement {
     const currentItemRef = useRef<null | HTMLDivElement>(null);
 
     const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (event) => {
         if (event.key === "Tab") {
-            if (currentItem < itemPositions.length - division) {
+            if (currentItem < itemPositions.length - items) {
                 setCurrentItem(itemIndex);
             }
             if (itemIndex === 0) {

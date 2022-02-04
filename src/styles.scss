@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
     &-inner {
         position: relative;
         width: 100%;
@@ -11,7 +12,6 @@
 .item {
     display: flex;
     outline: none;
-    overflow: hidden;
 
     &:hover {
         cursor: grab;
@@ -24,7 +24,6 @@
     &-inner {
         display: flex;
         width: 100%;
-        overflow: hidden;
     }
 
     img {

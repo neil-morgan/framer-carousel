@@ -8,7 +8,6 @@ export function Item({
     gap,
     itemIndex,
     itemWidth,
-    radius,
     itemPositions,
     items,
     setCurrentItem
@@ -47,9 +46,7 @@ export function Item({
             }}
             tabIndex={0}
         >
-            <div className="item-inner" style={{borderRadius: `${radius}px`}}>
-                {children}
-            </div>
+            <div className="item-inner">{children}</div>
         </div>
     );
 }

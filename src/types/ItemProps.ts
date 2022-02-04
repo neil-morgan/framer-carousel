@@ -6,6 +6,5 @@ export type ItemProps = {
     itemIndex: number;
     itemPositions: number[];
     itemWidth: number;
-    radius: number;
     setCurrentItem: (item: number) => void;
 };

@@ -100,7 +100,16 @@ export function FramerCarousel({
     };
 
     return (
-        <div className="container" ref={outerContainer} style={{borderRadius: `${radius}px`}}>
+        <div
+            className="container"
+            ref={outerContainer}
+            style={{
+                marginLeft: `-${gap * 0.66}px`,
+                width: `calc(100% + ${gap * 2 * 0.66}px)`,
+                padding: `${gap * 0.66}px`
+            }}
+        >
+            {/* maybe another element here for radius */}
             <div
                 className="container-inner"
                 ref={innerContainer}

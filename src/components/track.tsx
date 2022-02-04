@@ -7,7 +7,7 @@ import type {TrackProps} from "types";
 export function Track({
     children,
     currentItem,
-    division,
+    items,
     innerContainer,
     itemPositions,
     setCurrentItem,
@@ -17,19 +17,19 @@ export function Track({
     const controls = useAnimation();
     const x = useMotionValue(0);
 
-    const updateCarouselPosition = useCallback(
-        () =>
-            controls.start({
-                x: itemPositions[currentItem],
-                transition: {
-                    stiffness: 400,
-                    type: "spring",
-                    damping: 60,
-                    mass: 3
-                }
-            }),
-        [controls, currentItem, itemPositions]
-    );
+    const updateCarouselPosition = useCallback(() => {
+        void controls.start({
+            x: itemPositions[currentItem],
+            transition: {
+                stiffness: 400,
+                type: "spring",
+                damping: 60,
+                mass: 3
+            }
+        });
+    }, [controls, currentItem, itemPositions]);
+
+    // TODO: Refine to reduce/remove minimum drag distance needed to change current item
 
     const handleDragEnd = (_event: DragEvent, info: PanInfo) => {
         const distance = info.offset.x;
@@ -51,12 +51,12 @@ export function Track({
         );
 
         const newItemPosition =
-            closestItemPosition < itemPositions[itemPositions.length - division]
-                ? itemPositions.length - division
+            closestItemPosition < itemPositions[itemPositions.length - items]
+                ? itemPositions.length - items
                 : itemPositions.indexOf(closestItemPosition);
 
         if (newItemPosition === currentItem) {
-            void updateCarouselPosition();
+            updateCarouselPosition();
         } else {
             setCurrentItem(newItemPosition);
         }
@@ -66,10 +66,9 @@ export function Track({
         setDragStartPosition(itemPositions[currentItem]);
     };
 
-    useEffect(
-        () => void updateCarouselPosition(),
-        [controls, currentItem, itemPositions, updateCarouselPosition]
-    );
+    useEffect(() => {
+        updateCarouselPosition();
+    }, [updateCarouselPosition]);
 
     return (
         <motion.div

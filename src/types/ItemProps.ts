@@ -1,7 +1,7 @@
 export type ItemProps = {
     children: React.ReactNode;
     currentItem: number;
-    division: number;
+    items: number;
     gap: number;
     itemIndex: number;
     itemPositions: number[];

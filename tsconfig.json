@@ -3,6 +3,7 @@
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./src",
+        "rootDir": "./src",
         "declaration": true,
         "forceConsistentCasingInFileNames": true,
         "jsx": "react",

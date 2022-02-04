@@ -15,7 +15,7 @@ const config = {
         }
     ],
     plugins: [sass({insert: true}), typescript({objectHashIgnoreUnknownHack: false})],
-    external: ["react", "react-dom", "framer-motion", "resize-observer-polyfill"]
+    external: ["react", "react-dom", "framer-motion", "resize-observer-polyfill", "uuid"]
 };
 
 // eslint-disable-next-line import/no-default-export

@@ -1,5 +1,5 @@
 import type {ReactElement, KeyboardEventHandler} from "react";
-import React, {useRef, useEffect} from "react";
+import React, {useRef} from "react";
 import type {ItemProps} from "types";
 
 export function Item({
@@ -10,14 +10,14 @@ export function Item({
     itemWidth,
     radius,
     itemPositions,
-    division,
+    items,
     setCurrentItem
 }: ItemProps): ReactElement {
     const currentItemRef = useRef<null | HTMLDivElement>(null);
 
     const handleKeyUp: KeyboardEventHandler<HTMLDivElement> = (event) => {
         if (event.key === "Tab") {
-            if (currentItem < itemPositions.length - division) {
+            if (currentItem < itemPositions.length - items) {
                 setCurrentItem(itemIndex);
             }
             if (itemIndex === 0) {
@@ -26,11 +26,12 @@ export function Item({
         }
     };
 
-    useEffect(() => {
-        if (currentItem === itemIndex) {
-            currentItemRef.current?.focus();
-        }
-    }, [currentItem, itemIndex]);
+    // !BAD
+    // useEffect(() => {
+    //     if (currentItem === itemIndex) {
+    //         currentItemRef.current?.focus();
+    //     }
+    // }, [currentItem, itemIndex]);
 
     return (
         <div

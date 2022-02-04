@@ -8,8 +8,10 @@ export const getVelocityMultiplier = (
     if (width >= maxWidth) {
         return maxMulti;
     }
+
     if (width <= minWidth) {
         return minMulti;
     }
+
     return minMulti + ((width - minWidth) / (maxWidth - minWidth)) * (maxMulti - minMulti);
 };

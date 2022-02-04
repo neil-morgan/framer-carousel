@@ -4,23 +4,18 @@ import {useResizeObserver} from "hooks";
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import type {ReactElement, ReactNode} from "react";
 import type {CoreProps} from "types";
-import {getVelocityMultiplier} from "utils";
+import {defaultProps, getVelocityMultiplier, getBreakpointProps} from "utils";
 import {v4 as uuidv4} from "uuid";
 
 export function FramerCarousel({
     children,
-    radius = 7,
-    velocityMaxMultiplier = 0.35,
-    velocityMaxWidth = 1200,
-    velocityMinMultiplier = 0.35,
-    velocityMinWidth = 600
-}: // responsive = {
-//     0: {items: 1, gap: 3},
-//     640: {items: 2, gap: 4},
-//     768: {items: 3, gap: 5},
-//     1024: {items: 4, gap: 6}
-// }
-CoreProps): ReactElement {
+    radius = defaultProps.radius,
+    velocityMaxMultiplier = defaultProps.velocityMaxMultiplier,
+    velocityMaxWidth = defaultProps.velocityMaxWidth,
+    velocityMinMultiplier = defaultProps.velocityMinMultiplier,
+    velocityMinWidth = defaultProps.velocityMinWidth,
+    responsive = defaultProps.responsive
+}: CoreProps): ReactElement {
     const innerContainer = useRef<HTMLDivElement | null>(null);
     const outerContainer = useRef<HTMLDivElement | null>(null);
 
@@ -28,9 +23,7 @@ CoreProps): ReactElement {
     const [currentItem, setCurrentItem] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const [itemWidth, setItemWidth] = useState(0);
-    const items = 2;
-    const gap = 20;
-    // const {items, gap} = responsive[useBreakpoints(responsive).active];
+    const {items, gap} = responsive[getBreakpointProps(responsive).active];
 
     const itemPositions = useMemo(
         () => children.map((_: string, index: number) => -Math.abs(itemWidth * index)),
@@ -65,7 +58,10 @@ CoreProps): ReactElement {
                     setCurrentItem((prev) => prev + 1);
                 }
 
-                if ((code === "ArrowLeft" || code === "ArrowDown") && currentItem > 0) {
+                if (
+                    (code === "ArrowLeft" || code === "ArrowDown" || code === "Backspace") &&
+                    currentItem > 0
+                ) {
                     event.preventDefault();
                     setCurrentItem((prev) => prev - 1);
                 }

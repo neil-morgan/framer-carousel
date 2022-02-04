@@ -1,6 +1,8 @@
-import {useMediaQuery} from "hooks";
+import {useMediaQuery} from "../hooks";
 
-export const buildBreakpoints = (queries: object): object => {
+type BuildBreakpointsReturn = Record<string, string | number>;
+
+export const buildBreakpoints = (queries: Record<string, string>): BuildBreakpointsReturn => {
     let newBreakpoints = {active: 0};
     Object.keys(queries).forEach((query) => {
         newBreakpoints = {
@@ -8,6 +10,5 @@ export const buildBreakpoints = (queries: object): object => {
             [query]: useMediaQuery(queries[query])
         };
     });
-
     return newBreakpoints;
 };

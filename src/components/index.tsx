@@ -51,17 +51,14 @@ export function FramerCarousel({
                 const {code} = event;
 
                 if (
-                    (code === "ArrowRight" || code === "ArrowUp" || code === "Space") &&
+                    (code === "ArrowRight" || code === "Space") &&
                     currentItem < itemPositions.length - items
                 ) {
                     event.preventDefault();
                     setCurrentItem((prev) => prev + 1);
                 }
 
-                if (
-                    (code === "ArrowLeft" || code === "ArrowDown" || code === "Backspace") &&
-                    currentItem > 0
-                ) {
+                if ((code === "ArrowLeft" || code === "Backspace") && currentItem > 0) {
                     event.preventDefault();
                     setCurrentItem((prev) => prev - 1);
                 }
@@ -109,7 +106,6 @@ export function FramerCarousel({
                 padding: `${gap * 0.66}px`
             }}
         >
-            {/* maybe another element here for radius */}
             <div
                 className="container-inner"
                 ref={innerContainer}
